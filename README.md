@@ -95,8 +95,11 @@
 - 卸载 chrony `sudo apt remove chrony`
 - 设置正确的时间，避免 `apt` 出错 `sudo timedatectl set-time '2023-11-24 16:14:50'`
 - 安装 ntpdate `sudo apt update && sudo apt install ntpdate`
-- 在开机脚本里同步时间，编辑 `/etc/rc.local`，加入 `sudo -u <用户名> screen -h 32768 -dmS ntp bash -c 'sleep 30; while true; do date; sudo ntpdate -d 203.107.6.88 182.92.12.11 114.118.7.161 114.118.7.163; sleep 60; done;'`，这样每 60 秒就会同步一次时间
-    - 这里使用的是阿里云和国家授时中心的 NTP 服务器地址，直接使用 IP 地址，避免解析出错导致无法成功更新时间
+- 在开机脚本里同步时间，编辑 `/etc/rc.local`，加入如下脚本，这样每 60 秒就会同步一次时间
+    > 这里使用的是阿里云和国家授时中心的 NTP 服务器地址，直接使用 IP 地址，避免解析出错导致无法成功更新时间
+    ```bash
+    sudo -u <用户名> screen -h 32768 -dmS ntp bash -c 'sleep 30; while true; do date; sudo ntpdate -d 203.107.6.88 182.92.12.11 114.118.7.161 114.118.7.163; sleep 60; done;'
+    ```
 - 时间正确之后，可以更新一次系统 `sudo apt update && sudo apt upgrade`
 
 ## 键盘键位映射
@@ -244,8 +247,11 @@ fi
 ## 使用 tmux 实现比显示区域更大的窗口
 > 思路：使用 `xterm` 开一个大窗口，并在这个窗口里启动 `tmux` 会话，然后 attach 到这个 session，并设置不根据当前显示器大小调节 tmux 窗口大小
 - 安装 `xvfb`：`sudo apt install xvfb`
-- 修改 `/etc/rc.local` 里的 tmux 启动脚本：`sudo -u <用户名> screen -h 32768 -dmS term bash -c 'sleep 1; xvfb-run --server-args="-screen 0, 640x480x8" -a -w 2 xterm -fa "Zpix Mono" -fs 8 -geometry 110x19 -e "tmux new -s term"'`，为了更好的体验，`-geometry` 的行数最好和 `fbterm` 里的行数一致，列数最好是 `fbterm` 里的`（列数* 2)-3`，这样在左右分屏的时候，可以留一两列用于观察旁边的屏幕，更灵活
-- 修改 `~/scripts/fbterm.sh` 里的 `fbterm` 启动脚本：`fbterm -i fcitx-fbterm -- tmux attach -t term \; set-option window-size manual \; send-keys "clear; cd ~" Enter`
+- 修改 `/etc/rc.local` 里的 tmux 启动脚本：
+    - `sudo -u <用户名> screen -h 32768 -dmS term bash -c 'sleep 1; xvfb-run --server-args="-screen 0, 640x480x8" -a -w 2 xterm -fa "Zpix Mono" -fs 8 -geometry 110x19 -e "tmux new -s term"'`
+    - 为了更好的体验，`-geometry` 的行数最好和 `fbterm` 里的行数一致，列数最好是 `fbterm` 里的`（列数* 2)-3`，这样在左右分屏的时候，可以留一两列用于观察旁边的屏幕，更灵活
+- 修改 `~/scripts/fbterm.sh` 里的 `fbterm` 启动脚本：
+    - `fbterm -i fcitx-fbterm -- tmux attach -t term \; set-option window-size manual \; send-keys "clear; cd ~" Enter`
 - 重启 Pi，在 tmux 会话里输入 `tput cols` 和 `tput lines`，查看当前行列数是否比屏幕实际行列数更大
 - 使用 `C-b [` 进入复制模式，然后按方向键来移动视口（Viewport），从而查看屏幕内的所有内容
 
@@ -254,7 +260,9 @@ fi
 > 最好的办法就是跑一个虚拟机，关机的时候 save state，开机的时候 load state
 - 前置准备
     - 最好是编译一个带 kvm 的镜像，然后检查 `/dev/kvm` 是否存在
-    - 自行编译的镜像和官方发行版仓库的内核不兼容，需要屏蔽仓库的版本：`sudo apt-mark hold linux-dtb-next-sun50iw9 linux-headers-next-sun50iw9 linux-image-next-sun50iw9 linux-libc-dev linux-u-boot-orangepizero2w-next`，后续要更新，直接重新编译内核，然后使用 `deb` 包覆盖安装
+    - 自行编译的镜像和官方发行版仓库的内核不兼容，需要屏蔽仓库的版本：
+        - `sudo apt-mark hold linux-dtb-next-sun50iw9 linux-headers-next-sun50iw9 linux-image-next-sun50iw9 linux-libc-dev linux-u-boot-orangepizero2w-next`
+        - 后续要更新，直接重新编译内核，然后使用 `deb` 包覆盖安装
     - 安装 `qemu`：`sudo apt install qemu-system-arm qemu-utils qemu-system-gui ipxe-qemu qemu-efi-aarch64 qemu-efi seabios`
 - 虚拟机部署
     - 拷贝一份 EFI 固件：
@@ -374,7 +382,8 @@ fi
         fi
     done
     ```
-    - 修改 `~/scripts/fbterm.sh` 里的 `fbterm` 启动脚本：`fbterm -i fcitx-fbterm -- tmux attach -t term \; set-option window-size manual \; send-keys "clear; cd ~; ~/scripts/run-vm.sh" Enter`
+    - 修改 `~/scripts/fbterm.sh` 里的 `fbterm` 启动脚本：
+      - `fbterm -i fcitx-fbterm -- tmux attach -t term \; set-option window-size manual \; send-keys "clear; cd ~; ~/scripts/run-vm.sh" Enter`
 - 需要重启虚拟机时
     - 写一个脚本 `~/VM/clearstate.sh`：
     ```bash
