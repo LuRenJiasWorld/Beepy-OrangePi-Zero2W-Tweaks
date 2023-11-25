@@ -248,7 +248,9 @@ fi
 > 思路：使用 `xterm` 开一个大窗口，并在这个窗口里启动 `tmux` 会话，然后 attach 到这个 session，并设置不根据当前显示器大小调节 tmux 窗口大小
 - 安装 `xvfb`：`sudo apt install xvfb`
 - 修改 `/etc/rc.local` 里的 tmux 启动脚本：
-    - `sudo -u <用户名> screen -h 32768 -dmS term bash -c 'sleep 1; xvfb-run --server-args="-screen 0, 640x480x8" -a -w 2 xterm -fa "Zpix Mono" -fs 8 -geometry 110x19 -e "tmux new -s term"'`
+    ```bash
+    sudo -u <用户名> screen -h 32768 -dmS term bash -c 'sleep 1; xvfb-run --server-args="-screen 0, 640x480x8" -a -w 2 xterm -fa "Zpix Mono" -fs 8 -geometry 110x19 -e "tmux new -s term"'
+    ```
     - 为了更好的体验，`-geometry` 的行数最好和 `fbterm` 里的行数一致，列数最好是 `fbterm` 里的`（列数* 2)-3`，这样在左右分屏的时候，可以留一两列用于观察旁边的屏幕，更灵活
 - 修改 `~/scripts/fbterm.sh` 里的 `fbterm` 启动脚本：
     - `fbterm -i fcitx-fbterm -- tmux attach -t term \; set-option window-size manual \; send-keys "clear; cd ~" Enter`
