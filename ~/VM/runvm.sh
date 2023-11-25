@@ -38,7 +38,7 @@ while true; do
 
     if [[ $output == *"Linux"* ]]; then
         echo "Server ready, remove snapshot file"
-        rm -f snapshot
+        rm -f memsnapshot
         break
     else
         echo "Server not ready, retrying in 2 seconds..."
