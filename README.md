@@ -1,7 +1,7 @@
 # Beepy OrangePi Zero2W Tweaks
 
 
-> [Beepy](https://beepy.sqfmi.com/) 是由 [SQFMI](https://sqfmi.com/) 基于 [BBQ20KBD](https://www.solder.party/docs/bbq20kbd/) 项目开发的开源硬件，官方使用树莓派 Zero 作为核心板，但由于树莓派Zero的性能较弱，且性价比低，有闲鱼玩家开发了支持香橙派 Zero 2W 的驱动，并以较高的性价比销售 DIY 套件。本文将以该套件和香橙派 Zero 2W 为基础，分享一些笔者的个人配置，并尽量使其更实用、更美观、更高效
+> [Beepy](https://beepy.sqfmi.com/) 是由 [SQFMI](https://sqfmi.com/) 基于 [BBQ20KBD](https://www.solder.party/docs/bbq20kbd/) 项目开发的开源硬件，官方使用树莓派 Zero 作为核心板，但由于树莓派Zero的性能较弱，且性价比低，有闲鱼玩家开发了支持香橙派 Zero 2W 的驱动，并以较高的性价比销售 DIY 套件。本文将以该套件和香橙派 Zero 2W 为基础，分享一些笔者的个人配置，并尽量使其更实用、更美观、更高效。
 
 <p align="center">
     <img src="https://github.com/LuRenJiasWorld/Beepy-OrangePi-Zero2W-Tweaks/blob/master/.pic/Beepy1.jpg" alt="Beepy演示图片1" height="360"/>
