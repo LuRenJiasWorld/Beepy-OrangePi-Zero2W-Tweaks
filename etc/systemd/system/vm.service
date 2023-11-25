@@ -1,0 +1,14 @@
+[Unit]
+Description=Run VM
+Requires=rc-local.service
+Before=shutdown.target reboot.target halt.target
+RequiresMountsFor=/
+
+[Service]
+Type=simple
+ExecStart=/home/lurenjiasworld/VM/runvm.sh resume
+ExecStop=/home/lurenjiasworld/VM/savestate.sh
+WorkingDirectory=/home/lurenjiasworld/VM
+
+[Install]
+WantedBy=multi-user.target

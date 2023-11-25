@@ -1,0 +1,6 @@
+geometry=1600x900
+localhost=no
+CompareFB=1
+ZlibLevel=5
+FrameRate=30
+alwaysshared
